@@ -1,0 +1,15 @@
+{
+  "name": "Taskmap",
+  "version": "1.0.0",
+  "description": "A Node.js application with Express and PostgreSQL",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "server.js",
+    "dev": "server.js", 
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "pg": "^8.12.0"
+  }
+}
