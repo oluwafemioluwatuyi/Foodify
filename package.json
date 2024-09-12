@@ -1,15 +1,19 @@
 {
-  "name": "Taskmap",
+  "name": "Foodify",
   "version": "1.0.0",
   "description": "A Node.js application with Express and PostgreSQL",
   "main": "src/app.js",
   "scripts": {
-    "start": "server.js",
-    "dev": "server.js", 
+    "start": "node server.js",
+    "dev": "server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
     "express": "^4.19.2",
-    "pg": "^8.12.0"
+    "fs": "^0.0.1-security",
+    "path": "^0.12.7",
+    "sequelize": "^6.37.3",
+    "sequelize-cli": "^6.6.2",
+    "tedious": "^18.6.1"
   }
 }

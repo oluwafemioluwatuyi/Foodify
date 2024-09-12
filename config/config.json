@@ -1,0 +1,29 @@
+{
+  "development": {
+    "username": "username",
+    "password": "password#",
+    "database": "development",
+    "host": "localhost\\SQLEXPRESS",
+    "dialect": "mssql",
+    "dialectModule": "tedious",
+    "logging": false
+  },
+  "test": {
+    "username": "username",
+    "password": "password#",
+    "database": "your_test_database",
+    "host": "localhost\\SQLEXPRESS",
+    "dialect": "mssql",
+    "dialectModule": "tedious",
+    "logging": false
+  },
+  "production": {
+    "username": "username",
+    "password": "password#",
+    "database": "your_production_database",
+    "host": "localhost\\SQLEXPRESS",
+    "dialect": "mssql",
+    "dialectModule": "tedious",
+    "logging": false
+  }
+}
