@@ -1,13 +1,20 @@
 
 const express = require('express');
 const app = express();
+const db = require('../src/models/index')
 
 app.use(express.json());
 
-// Example route
-app.get('/', (req, res) => {
-  res.send('Server is running!');
-});
+app.get('/', async(req,res)=>{
+  try{
+    await db.sequelize.authenticate();
+    res.send('server is running');
+  }catch(error){
+    console.log('unable to conncet', error)
+    res.status(500).send('Database connection error');
+
+  }
+})
 
 
 module.exports = app;
