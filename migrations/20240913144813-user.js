@@ -1,22 +1,79 @@
 'use strict';
 
-/** @type {import('sequelize-cli').Migration} */
+const USER_TYPES = require('../src/models/enumConstant/userTypes');
+
 module.exports = {
-  async up (queryInterface, Sequelize) {
-    /**
-     * Add altering commands here.
-     *
-     * Example:
-     * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
-     */
+  up: async (queryInterface, Sequelize) => {
+    await queryInterface.createTable('Users', {
+      id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+        allowNull: false,
+      },
+      firstName: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      lastName: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      email: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true,
+      },
+      password: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      phone: {
+        type: Sequelize.STRING,
+      },
+      user_type: {
+        type: Sequelize.ENUM(Object.values(USER_TYPES)), // Adjust based on USER_TYPES
+        allowNull: true,
+      },
+      NIN_number: {
+        type: Sequelize.STRING,
+      },
+      Voter_card: {
+        type: Sequelize.STRING,
+      },
+      Account_number: {
+        type: Sequelize.STRING,
+      },
+      Account_name: {
+        type: Sequelize.STRING,
+      },
+      profile_picture: {
+        type: Sequelize.STRING,
+      },
+      date_of_birth: {
+        type: Sequelize.DATE,
+      },
+      latitude: {
+        type: Sequelize.DECIMAL(9, 6),
+      },
+      longitude: {
+        type: Sequelize.DECIMAL(9, 6),
+      },
+      createdAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      },
+      updatedAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      },
+
+    })
   },
 
-  async down (queryInterface, Sequelize) {
-    /**
-     * Add reverting commands here.
-     *
-     * Example:
-     * await queryInterface.dropTable('users');
-     */
+  down: async (queryInterface, Sequelize) => {
+    await queryInterface.dropTable('Users');
   }
 };

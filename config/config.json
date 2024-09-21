@@ -4,13 +4,14 @@
     "password": "password#",
     "database": "development",
     "host": "localhost",
+    "port": 1433,
     "dialect": "mssql",
-    "dialectModule": "tedious",
-    "logging": false,
-    "options": {
-      "encrypt": true,
-      "trustServerCertificate": true
-    }
+    "dialectOptions": {
+      "options": {
+        "encrypt": false,
+        "trustServerCertificate": true
+      }
+    },
+    "logging": false
   }
- 
 }
