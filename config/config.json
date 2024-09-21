@@ -12,6 +12,6 @@
         "trustServerCertificate": true
       }
     },
-    "logging": false
+    "logging": true
   }
 }
