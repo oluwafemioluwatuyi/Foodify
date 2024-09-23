@@ -32,7 +32,7 @@ module.exports = {
         type: Sequelize.STRING,
       },
       user_type: {
-        type: Sequelize.ENUM(Object.values(USER_TYPES)), // Adjust based on USER_TYPES
+        type: Sequelize.ENUM(...Object.values(USER_TYPES)), // Adjust based on USER_TYPES
         allowNull: true,
       },
       NIN_number: {
@@ -74,6 +74,15 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
+
+      // Drop tables that reference Users first
+      await queryInterface.dropTable('Wallets'); // Adjust if the table name is different
+      await queryInterface.dropTable('Orders'); // Adjust if the table name is different
+      await queryInterface.dropTable('Ratings'); // Adjust if the table name is different
+      await queryInterface.dropTable('Addresses'); // Adjust if the table name is different
+      
+      // Now drop the Users table
+      await queryInterface.dropTable('Users');
     await queryInterface.dropTable('Users');
   }
 };

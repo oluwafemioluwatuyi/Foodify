@@ -1,8 +1,8 @@
-const permission_type = require('../models/enumConstant/userTypes');
+const permission_type = require('../models/enumConstant/permissionAction');
 module.exports = (sequelize, DataTypes) => {
     const Permission = sequelize.define('Permission', {
       permissionAction: {
-        type: DataTypes.ENUM(Object.values(permission_type)),
+        type: DataTypes.ENUM(...permission_type),
         allowNull: false,
         unique: true, // Ensuring each permission action is unique
       },
