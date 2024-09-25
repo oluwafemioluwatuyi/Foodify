@@ -1,9 +1,12 @@
 
-const express = require('express');
+const express = require(express);
+const authRoutes = require('./routes/authRoutes'); 
 const app = express();
 const db = require('../src/models/index')
 
 app.use(express.json());
+
+app.use('/api/auth', authRoutes);
 
 app.get('/', async(req,res)=>{
   try{
