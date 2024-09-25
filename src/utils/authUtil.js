@@ -13,18 +13,18 @@ const confirmPassword = async(passsword, hashPawword)=>{
     return await bcrypt.compare(passsword, hashPawword)
 }
 
-const generateToken =catchAsync(async(user)=>{
+const generateEmailVerificationToken =catchAsync(async(user)=>{
     const signUp = promisify(jwt.sign);   
     
         const token = await signUp(
             {
                 id:user.id,
                 email:user.email,
-                passsword:user.password
+                password:user.password
             },
             process.env.JWT_SECRET,
             {
-             expirateDate: process.env.JWT-EXPIRES_IN
+                expiresIn: process.env.JWT-EXPIRES_IN
             }
             
         )
@@ -32,8 +32,26 @@ const generateToken =catchAsync(async(user)=>{
    
 });
 
+const generateToken = catchAsync(async (user) => {
+    const signUp = promisify(jwt.sign);   
+
+    const token = await signUp(
+        {
+            id: user.id,
+            email: user.email,
+        },
+        process.env.JWT_SECRET,
+        {
+            expiresIn: process.env.JWT_EXPIRES_IN
+        }
+    );
+
+    return token;
+});
+
+
 module.exports = {
-    hashPawword, confirmPassword, generateToken
+    hashPawword, confirmPassword, generateEmailVerificationToken, generateToken
 };
 
 
