@@ -1,29 +1,17 @@
 {
   "development": {
-    "username": "username1",
+    "username": "username_sa",
     "password": "password#",
     "database": "development",
-    "host": "localhost\\SQLEXPRESS",
+    "host": "localhost",
+    "port": 1433,
     "dialect": "mssql",
-    "dialectModule": "tedious",
-    "logging": false
-  },
-  "test": {
-    "username": "username",
-    "password": "password#",
-    "database": "your_test_database",
-    "host": "localhost\\SQLEXPRESS",
-    "dialect": "mssql",
-    "dialectModule": "tedious",
-    "logging": false
-  },
-  "production": {
-    "username": "username",
-    "password": "password#",
-    "database": "your_production_database",
-    "host": "localhost\\SQLEXPRESS",
-    "dialect": "mssql",
-    "dialectModule": "tedious",
-    "logging": false
+    "dialectOptions": {
+      "options": {
+        "encrypt": false,
+        "trustServerCertificate": true
+      }
+    },
+    "logging": true
   }
 }

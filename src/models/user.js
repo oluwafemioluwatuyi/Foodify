@@ -1,12 +1,15 @@
-const USER_TYPES = require('../models/enumConstant/userTypes');
+const USER_TYPES = require('./enumConstant/userTypes');
 module.exports = (sequelize, DataTypes) =>{
-    const User = sequelize.define('user',{
+    const User = sequelize.define('User',{
         firstName: {type:DataTypes.STRING, allowNull: false},
         lastName:{ type:DataTypes.STRING, allowNull:false},
-        email: { type: DataTypes.STRING, allowNull: false, unique: true },
-        password: { type: DataTypes.STRING, allowNull: false },
+        email: { type: DataTypes.STRING, allowNull: false, unique: false },
+        password: { type: DataTypes.STRING, allowNull: false, unique:false },
         phone: { type: DataTypes.STRING },
-        user_type: DataTypes.ENUM(USER_TYPES),
+        isEmailVerified: {type:DataTypes.boolean},
+        emailVerificationToken: {type:DataTypes.STRING},
+        tokenExpirationDate: {type:DataTypes.DATE},
+        user_type:{type: DataTypes.ENUM(...Object.values(USER_TYPES)), allowNull: true},
         NIN_number: { type: DataTypes.STRING },
         Voter_card: { type: DataTypes.STRING },
         Account_number: { type: DataTypes.STRING },
@@ -24,3 +27,5 @@ module.exports = (sequelize, DataTypes) =>{
     }
     return User;
 }
+
+  

@@ -6,14 +6,20 @@
   "scripts": {
     "start": "node server.js",
     "dev": "server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "migrate-and-seed": "sequelize-cli db:migrate && sequelize-cli db:seed:all",
+    "reset-db": "sequelize-cli db:migrate:undo:all && sequelize-cli db:migrate && sequelize-cli db:seed:all"
   },
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "express": "^4.19.2",
     "fs": "^0.0.1-security",
     "path": "^0.12.7",
     "sequelize": "^6.37.3",
     "sequelize-cli": "^6.6.2",
     "tedious": "^18.6.1"
+  },
+  "devDependencies": {
+    "sequelize-auto-migrations": "^1.0.3"
   }
 }
