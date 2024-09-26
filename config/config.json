@@ -1,6 +1,6 @@
 {
   "development": {
-    "username": "username",
+    "username": "username1",
     "password": "password#",
     "database": "development",
     "host": "localhost\\SQLEXPRESS",
