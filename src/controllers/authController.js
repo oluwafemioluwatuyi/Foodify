@@ -136,6 +136,12 @@ const verifyEmail = catchAsync(async(req,res) =>{
      return res.status(200).json({ message: 'Email successfully verified' });
 })
 
+//resendemailverificationtoken
+
+// forgot password
+
+//reset password
+
 module.exports = {
     Register, Login, verifyEmail
 }
