@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) =>{
         phone: { type: DataTypes.STRING },
         isEmailVerified: {type:DataTypes.BOOLEAN},
         emailVerificationToken: {type:DataTypes.STRING},
+        passwordResetToken: {type:DataTypes.STRING},
         tokenExpirationDate: {type:DataTypes.DATE},
         user_type:{type: DataTypes.ENUM(...Object.values(USER_TYPES)), allowNull: true},
         NIN_number: { type: DataTypes.STRING },

@@ -137,8 +137,19 @@ const verifyEmail = catchAsync(async(req,res) =>{
 })
 
 //resendemailverificationtoken
+const forgotPassword = catchAsync(async (req,res)=>{
+    const {email} = req.body;
 
-// forgot password
+    const user = await User.findOne({where:email});
+    if(!user)
+    {
+     return res.status(404).json({ message: 'User not found' });
+    }
+    const token = generateToken(user);
+    user.passWordResetToken = token;
+    user.tokenExpirationDate = Date.now() +36000;
+    await user.save();
+})
 
 //reset password
 

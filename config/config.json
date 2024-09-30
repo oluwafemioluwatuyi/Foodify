@@ -1,14 +1,14 @@
 {
   "development": {
-    "username": "username_sa",
-    "password": "password#",
-    "database": "development",
-    "host": "localhost",
-    "port": 1433,
+    "username": "sa",  
+    "password": "password#", 
+    "database": "development",    
+    "host": "localhost",          
+    "port": 1433,                 
     "dialect": "mssql",
     "dialectOptions": {
       "options": {
-        "encrypt": false,
+        "encrypt": false,  
         "trustServerCertificate": true
       }
     },
