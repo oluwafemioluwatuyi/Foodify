@@ -1,5 +1,8 @@
 const User = require('../models/User');
 const USER_TYPE = require('../models/enumConstant/userTypes');
+const ControllerHelper = require('../Helpers/ControllerHelper');
+const ResponseStatus = require('../Helpers/ResponseStatus');
+const AppStatusCodes = require('../Helpers/AppStatusCode');
 const { hashPawword, confirmPassword, generateEmailVerificationToken, generateToken} = require('../utils/authUtil');
 const catchAsync = require('../utils/catchAsync');
 const sendVerificationEmail  = require('../utils/emailUtil')
@@ -76,10 +79,18 @@ const Register = catchAsync(async (req, res) =>{
     const verificationtoken =  generateEmailVerificationToken(newUser);
      await sendVerificationEmail(newUser.email , verificationtoken);
 
-     return res.status(201).JSON({
-        message:"user succefully registered.Check your mail for verification link",
-        user:newUser
-     })
+    //  return res.status(201).JSON({
+    //     message:"user succefully registered.Check your mail for verification link",
+    //     user:newUser
+    //  })
+
+     return ControllerHelper.handleApiResponse(
+            res,
+            ResponseStatus.Created,
+            AppStatusCodes.Success,
+            "User registered successfully",
+            newUser
+        );
 });
 
 const Login = catchAsync(async(req,res)=>{
