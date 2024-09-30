@@ -1,12 +1,11 @@
-
-const express = require(express);
-const authRoutes = require('./routes/authRoutes'); 
+const express = require('express');
+const router = require('./routes/authRoute'); 
 const app = express();
 const db = require('../src/models/index')
 
 app.use(express.json());
 
-app.use('/api/auth', authRoutes);
+app.use('/api/auth', router);
 
 app.get('/', async(req,res)=>{
   try{

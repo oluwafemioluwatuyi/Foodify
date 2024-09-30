@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) =>{
         email: { type: DataTypes.STRING, allowNull: false, unique: false },
         password: { type: DataTypes.STRING, allowNull: false, unique:false },
         phone: { type: DataTypes.STRING },
-        isEmailVerified: {type:DataTypes.boolean},
+        isEmailVerified: {type:DataTypes.BOOLEAN},
         emailVerificationToken: {type:DataTypes.STRING},
         tokenExpirationDate: {type:DataTypes.DATE},
         user_type:{type: DataTypes.ENUM(...Object.values(USER_TYPES)), allowNull: true},
