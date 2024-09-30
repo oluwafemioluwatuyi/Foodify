@@ -136,7 +136,7 @@ const verifyEmail = catchAsync(async(req,res) =>{
      return res.status(200).json({ message: 'Email successfully verified' });
 })
 
-//resendemailverificationtoken
+
 const forgotPassword = catchAsync(async (req,res)=>{
     const {email} = req.body;
 
@@ -151,8 +151,21 @@ const forgotPassword = catchAsync(async (req,res)=>{
     await user.save();
 })
 
-//reset password
+const resetPassword = catchAsync(async (req, res)=>{
+    const {token, newPassword} = req.body;
+
+    //decode the token and find the user
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findByPk(decoded.id);
+    if(!user ||user.tokenExpirationDate < Date.now()){
+        return res.status(400).json({ message: 'Token is invalid or has expired' });
+    }
+    user.password = await hashPawword(newPassword);
+    user.passWordResetToken =null;
+    user.tokenExpirationDate = null;
+    await user.save();
+})
 
 module.exports = {
-    Register, Login, verifyEmail
+    Register, Login, verifyEmail, forgotPassword, resetPassword
 }
