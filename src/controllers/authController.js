@@ -1,5 +1,8 @@
 const User = require('../models/User');
 const USER_TYPE = require('../models/enumConstant/userTypes');
+const ControllerHelper = require('../Helpers/ControllerHelper');
+const ResponseStatus = require('../Helpers/ResponseStatus');
+const AppStatusCodes = require('../Helpers/AppStatusCode');
 const { hashPawword, confirmPassword, generateEmailVerificationToken, generateToken} = require('../utils/authUtil');
 const catchAsync = require('../utils/catchAsync');
 const sendVerificationEmail  = require('../utils/emailUtil')
@@ -76,10 +79,18 @@ const Register = catchAsync(async (req, res) =>{
     const verificationtoken =  generateEmailVerificationToken(newUser);
      await sendVerificationEmail(newUser.email , verificationtoken);
 
-     return res.status(201).JSON({
-        message:"user succefully registered.Check your mail for verification link",
-        user:newUser
-     })
+    //  return res.status(201).JSON({
+    //     message:"user succefully registered.Check your mail for verification link",
+    //     user:newUser
+    //  })
+
+     return ControllerHelper.handleApiResponse(
+            res,
+            ResponseStatus.Created,
+            AppStatusCodes.Success,
+            "User registered successfully",
+            newUser
+        );
 });
 
 const Login = catchAsync(async(req,res)=>{
@@ -136,12 +147,36 @@ const verifyEmail = catchAsync(async(req,res) =>{
      return res.status(200).json({ message: 'Email successfully verified' });
 })
 
-//resendemailverificationtoken
 
-// forgot password
+const forgotPassword = catchAsync(async (req,res)=>{
+    const {email} = req.body;
 
-//reset password
+    const user = await User.findOne({where:email});
+    if(!user)
+    {
+     return res.status(404).json({ message: 'User not found' });
+    }
+    const token = generateToken(user);
+    user.passWordResetToken = token;
+    user.tokenExpirationDate = Date.now() +36000;
+    await user.save();
+})
+
+const resetPassword = catchAsync(async (req, res)=>{
+    const {token, newPassword} = req.body;
+
+    //decode the token and find the user
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findByPk(decoded.id);
+    if(!user ||user.tokenExpirationDate < Date.now()){
+        return res.status(400).json({ message: 'Token is invalid or has expired' });
+    }
+    user.password = await hashPawword(newPassword);
+    user.passWordResetToken =null;
+    user.tokenExpirationDate = null;
+    await user.save();
+})
 
 module.exports = {
-    Register, Login, verifyEmail
+    Register, Login, verifyEmail, forgotPassword, resetPassword
 }
