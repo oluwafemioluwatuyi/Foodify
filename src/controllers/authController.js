@@ -1,4 +1,4 @@
-const User = require('../models/User');
+const User = require('../models/user.js');
 const USER_TYPE = require('../models/enumConstant/userTypes');
 const ControllerHelper = require('../Helpers/ControllerHelper');
 const ResponseStatus = require('../Helpers/ResponseStatus');
@@ -10,10 +10,13 @@ const sendVerificationEmail  = require('../utils/emailUtil')
 
 const Register = catchAsync(async (req, res) =>{
     const {firstName, lastName, email, password, user_type, phone, NIN_number, Voter_card, Account_number, Account_name, profile_picture, date_of_birth, latitude, longitude} = req.body;
+    console.log(User);
+    console.log(Object.keys(User));  // This should show methods like 'findOne', 'create', etc.
 
-    if(Object.value(USER_TYPE).include(user_type))
+    console.log('User.findOne:', typeof User.findOne);
+    if(!Object.values(USER_TYPE).includes(user_type))
     {
-        return res.statusCode(404).JSON({message:'cannot be found'});
+        return res.status(404).json({message:'cannot be found'});
     }
 
     //check if the user exits
@@ -79,11 +82,6 @@ const Register = catchAsync(async (req, res) =>{
     const verificationtoken =  generateEmailVerificationToken(newUser);
      await sendVerificationEmail(newUser.email , verificationtoken);
 
-    //  return res.status(201).JSON({
-    //     message:"user succefully registered.Check your mail for verification link",
-    //     user:newUser
-    //  })
-
      return ControllerHelper.handleApiResponse(
             res,
             ResponseStatus.Created,
@@ -114,9 +112,13 @@ const Login = catchAsync(async(req,res)=>{
         return res.status(403).json({ message: 'Email not verified. Please verify your email to log in.' });
      }
      const token = generateToken(user);
-     return res.status(201).JSON({
-        message: 'login succesfully',    
-     })
+     return ControllerHelper.handleApiResponse(
+        res,
+        ResponseStatus.Created,
+        AppStatusCodes.Success,
+        "User registered successfully",
+        newUser
+     )
 });
 
 const verifyEmail = catchAsync(async(req,res) =>{

@@ -5,7 +5,7 @@
   "main": "src/app.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "server.js",
+    "dev": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "migrate-and-seed": "sequelize-cli db:migrate && sequelize-cli db:seed:all",
     "reset-db": "sequelize-cli db:migrate:undo:all && sequelize-cli db:migrate && sequelize-cli db:seed:all"
@@ -21,6 +21,7 @@
     "tedious": "^18.6.1"
   },
   "devDependencies": {
+    "nodemon": "^3.1.7",
     "sequelize-auto-migrations": "^1.0.3"
   }
 }
