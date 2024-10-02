@@ -3,6 +3,9 @@ const jwt = require('jsonwebtoken');
 const {promisify} = require('util');
 const catchAsync = require('./catchAsync');
 
+require('dotenv').config();  // Load .env variables
+
+
 const hashPawword = async(password) =>{
     const saltRound = 10;
     return await bcrypt.hash(password, saltRound);
@@ -24,7 +27,7 @@ const generateEmailVerificationToken =catchAsync(async(user)=>{
             },
             process.env.JWT_SECRET,
             {
-                expiresIn: process.env.JWT-EXPIRES_IN
+                expiresIn: process.env.JWT_EXPIRES_IN
             }
             
         )

@@ -1,4 +1,4 @@
-const User = require('../models/user.js');
+const {User} = require('../models/index.js');
 const USER_TYPE = require('../models/enumConstant/userTypes');
 const ControllerHelper = require('../Helpers/ControllerHelper');
 const ResponseStatus = require('../Helpers/ResponseStatus');
@@ -25,7 +25,7 @@ const Register = catchAsync(async (req, res) =>{
 
     if(existingUser)
     {
-        return res.status(402).Json({message:"user already exists"})
+        return res.status(402).json({message:"user already exists"})
     }
      // hass password
     const hassPassword =  await  hashPawword(password);
@@ -34,53 +34,81 @@ const Register = catchAsync(async (req, res) =>{
 
     if(user_type === USER_TYPE.CUSTOMER)
     {
-        newUser = await User.Create({
-            firstName,
-            lastName,
-            email,
-            password:hassPassword,
-            user_type,
-            phone,
-            date_of_birth,
-            profile_picture
-        })
-    }else if(user_type === USER_TYPE.DRIVER)
-    {
-        newUser = await User.Create({
-            firstName,
-            lastName,
-            email,
-            password: hashedPassword,
-            user_type,
-            phone,
-            Voter_card,
-            latitude,
-            longitude,
-            profile_picture
-        })
-
-    }else(user_type === USER_TYPE.Vendor)
-    {
-        newUser = await User.Create(
-            {
+        try {
+            console.log('Creating user with data:', {
                 firstName,
                 lastName,
                 email,
-                password: hashedPassword,
+                password: hassPassword,
                 user_type,
                 phone,
-                NIN_number,
-                Account_number,
-                Account_name,
-                profile_picture
-
-            }
-        )
-
+                date_of_birth,
+                profile_picture,
+            });
+        
+            newUser = await User.create({
+                firstName,
+                lastName,
+                email,
+                password:hassPassword,
+                user_type,
+                phone: phone || null, // explicitly set to null if not provided
+                date_of_birth, // ensure it's a Date object or null
+                profile_picture: profile_picture || null,
+                NIN_number: NIN_number || null,
+                Voter_card: Voter_card || null,
+                Account_number: Account_number || null,
+                Account_name: Account_name || null,
+                latitude: latitude || null,
+                longitude: longitude || null,
+            });
+        
+            console.log('User created successfully:', newUser);
+        } catch (error) {
+            console.error('Error creating user:', error); // Log the full error for context
+            return res.status(500).json({ message: 'An error occurred while creating the user.', error });
+        }
+        
     }
+    // else if(user_type === USER_TYPE.DRIVER)
+    // {
+    //     newUser = await User.create({
+    //         firstName,
+    //         lastName,
+    //         email,
+    //         password: hassPassword,
+    //         user_type,
+    //         phone,
+    //         Voter_card,
+    //         latitude,
+    //         longitude,
+    //         profile_picture
+    //     })
+
+    // }
+    // else(user_type === USER_TYPE.Vendor)
+    // {
+    //     newUser = await User.create(
+    //         {
+    //             firstName,
+    //             lastName,
+    //             email,
+    //             password: hassPassword,
+    //             user_type,
+    //             phone,
+    //             NIN_number,
+    //             Account_number,
+    //             Account_name,
+    //             profile_picture
+
+    //         }
+    //     )
+
+    // }
 
     const verificationtoken =  generateEmailVerificationToken(newUser);
      await sendVerificationEmail(newUser.email , verificationtoken);
+     console.log('Generated verification token:', verificationtoken);
 
      return ControllerHelper.handleApiResponse(
             res,
