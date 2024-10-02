@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) =>{
         password: { type: DataTypes.STRING, allowNull: false },
         phone: { type: DataTypes.STRING },
         isEmailVerified: {type:DataTypes.BOOLEAN,allowNull: true,},
-        emailVerificationToken: {type:DataTypes.STRING,allowNull: true,},
+        emailVerificationToken: {type:DataTypes.STRING(512),allowNull: true,},
         passwordResetToken: {type:DataTypes.STRING,allowNull: true,},
         tokenExpirationDate: {type:DataTypes.DATE,allowNull: true,},
         user_type:{type: DataTypes.ENUM(...Object.values(USER_TYPES)), allowNull: false},
@@ -22,12 +22,6 @@ module.exports = (sequelize, DataTypes) =>{
         latitude: { type: DataTypes.DECIMAL(9, 6),allowNull: true, },
         longitude: { type: DataTypes.DECIMAL(9, 6),allowNull: true, }
     });
-    // User.associate = function(models){
-    //     User.hasOne(models.Wallet, {foreignKey: "userId"})
-    //     User.hasMany(models.Order, {foreignKey:"userId"})
-    //     User.hasMany(models.Rating, { foreignKey: 'user_id' });
-    //     User.hasMany(models.Address, { foreignKey: 'user_id' });
-    // }
     return User;
 }
 

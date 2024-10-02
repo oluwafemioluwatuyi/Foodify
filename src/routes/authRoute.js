@@ -7,7 +7,7 @@ router.post('/register', Register);
 router.post('/forgotPassword',forgotPassword )
 router.post('/forgotPassword',resetPassword )
 router.post('/login', Login);
-router.post('/verify-email', verifyEmail);
+router.get('/verify-email', verifyEmail);
 
 module.exports = router;
 

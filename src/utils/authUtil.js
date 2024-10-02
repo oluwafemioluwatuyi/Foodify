@@ -6,7 +6,7 @@ const catchAsync = require('./catchAsync');
 require('dotenv').config();  // Load .env variables
 
 
-const hashPawword = async(password) =>{
+const hashPassword = async(password) =>{
     const saltRound = 10;
     return await bcrypt.hash(password, saltRound);
 }
@@ -16,7 +16,7 @@ const confirmPassword = async(passsword, hashPawword)=>{
     return await bcrypt.compare(passsword, hashPawword)
 }
 
-const generateEmailVerificationToken =catchAsync(async(user)=>{
+const generateEmailVerificationToken =async(user)=>{
     const signUp = promisify(jwt.sign);   
     
         const token = await signUp(
@@ -33,9 +33,9 @@ const generateEmailVerificationToken =catchAsync(async(user)=>{
         )
         return token;
    
-});
+};
 
-const generateToken = catchAsync(async (user) => {
+const generateToken = async (user) => {
     const signUp = promisify(jwt.sign);   
 
     const token = await signUp(
@@ -50,11 +50,11 @@ const generateToken = catchAsync(async (user) => {
     );
 
     return token;
-});
+};
 
 
 module.exports = {
-    hashPawword, confirmPassword, generateEmailVerificationToken, generateToken
+    hashPassword, confirmPassword, generateEmailVerificationToken, generateToken
 };
 
 
