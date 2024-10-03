@@ -7,6 +7,7 @@ const {hashPassword, confirmPassword, generateEmailVerificationToken, generateTo
 const catchAsync = require('../utils/catchAsync');
 const sendVerificationEmail  = require('../utils/emailUtil');
 const jwt = require('jsonwebtoken');
+const { Op } = require('sequelize');
 
 
 
@@ -92,10 +93,14 @@ const Register = catchAsync(async (req, res) =>{
 
 const Login = catchAsync(async(req,res)=>{
     const {email, password} = req.body;
-     const user = await User.findOne({where:email});
-     if(!existingmail)
+    const user = await User.findOne({ 
+        where: { 
+          email: { [Op.eq]: email } 
+        }
+      });
+     if(!user)
      {
-        return
+         return res.status(404).json({ message: 'User not found. Please check your credentials.' });
      }
 
      //check if the email is verified
@@ -105,19 +110,24 @@ const Login = catchAsync(async(req,res)=>{
 
      }
     //check if the password is matched
-     const checkPassword = await  confirmPassword(password, user.hashPawword)
+     const checkPassword = await  confirmPassword(password, user.password)
      if(!checkPassword)
      {
         return res.status(403).json({ message: 'Email not verified. Please verify your email to log in.' });
      }
-     const token = generateToken(user);
-     return ControllerHelper.handleApiResponse(
-        res,
-        ResponseStatus.Created,
-        AppStatusCodes.Success,
-        "User registered successfully",
-        newUser
-     )
+     const token = await generateToken(user);
+    
+     return res.status(200).json({ 
+        message: 'Login successful', 
+        token
+      });
+    //  return ControllerHelper.handleApiResponse(
+    //     res,
+    //     ResponseStatus.Created,
+    //     AppStatusCodes.Success,
+    //     "User registered successfully",
+    //     newUser
+    //  )
 });
 
 const verifyEmail = catchAsync(async(req,res) =>{
@@ -149,19 +159,24 @@ const verifyEmail = catchAsync(async(req,res) =>{
 })
 
 
-const forgotPassword = catchAsync(async (req,res)=>{
+const forgotPassword = async (req,res)=>{
     const {email} = req.body;
 
-    const user = await User.findOne({where:email});
+    const user = await User.findOne({ 
+        where: { 
+          email: { [Op.eq]: email } 
+        }
+      });
     if(!user)
     {
      return res.status(404).json({ message: 'User not found' });
     }
-    const token = generateToken(user);
-    user.passWordResetToken = token;
+    const token = await generateToken(user);
+    user.passwordResetToken = token;
     user.tokenExpirationDate = Date.now() +36000;
     await user.save();
-})
+    return res.status(200).json({ message: 'Password reset token generated successfully', token });
+}
 
 const resetPassword = catchAsync(async (req, res)=>{
     const {token, newPassword} = req.body;

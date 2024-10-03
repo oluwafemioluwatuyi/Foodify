@@ -11,9 +11,9 @@ const hashPassword = async(password) =>{
     return await bcrypt.hash(password, saltRound);
 }
 
-const confirmPassword = async(passsword, hashPawword)=>{
+const confirmPassword = async(password, hashPassword)=>{
 
-    return await bcrypt.compare(passsword, hashPawword)
+    return await bcrypt.compare(password, hashPassword)
 }
 
 const generateEmailVerificationToken =async(user)=>{
