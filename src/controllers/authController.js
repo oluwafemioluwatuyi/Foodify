@@ -178,8 +178,8 @@ const forgotPassword = async (req,res)=>{
     return res.status(200).json({ message: 'Password reset token generated successfully', token });
 }
 
-const resetPassword = catchAsync(async (req, res)=>{
-    const {token, newPassword} = req.body;
+const resetPassword = async (req, res)=>{
+    const {token, password} = req.body;
 
     //decode the token and find the user
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -187,11 +187,12 @@ const resetPassword = catchAsync(async (req, res)=>{
     if(!user ||user.tokenExpirationDate < Date.now()){
         return res.status(400).json({ message: 'Token is invalid or has expired' });
     }
-    user.password = await hashPawword(newPassword);
+    user.password = await hashPassword(password);
     user.passWordResetToken =null;
     user.tokenExpirationDate = null;
     await user.save();
-})
+    return res.status(200).json({ message: 'Password reset successfully'});
+}
 
 module.exports = {
     Register, Login, verifyEmail, forgotPassword, resetPassword
