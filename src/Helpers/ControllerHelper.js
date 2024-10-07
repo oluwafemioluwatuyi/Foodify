@@ -2,38 +2,51 @@ const ApiResponse = require('./ApiResponse');
 const ResponseStatus = require('./ResponseStatus');
 
 class ControllerHelper {
-    static handleApiResponse(res, response) {
-        switch (response.status) {
+    static handleApiResponse(res, result, status, message) {
+        let statusCode;
+        switch (status) {
             case ResponseStatus.Success:
-                return res.status(200).json(new ApiResponse('Success', 200, response.message, response.result));
+                statusCode = 200;
+                break;
 
             case ResponseStatus.Created:
-                return res.status(201).json(new ApiResponse('Created', 201, response.message, response.result));
+                statusCode = 201;
+                break;
 
             case ResponseStatus.Error:
-                return res.status(500).json(new ApiResponse('Error', 500, response.message, response.result));
+                statusCode = 500;
+                break;
 
             case ResponseStatus.NotFound:
-                return res.status(404).json(new ApiResponse('Not Found', 404, response.message));
+                statusCode = 404;
+                break;
 
             case ResponseStatus.Unauthorized:
-                return res.status(401).json(new ApiResponse('Unauthorized', 401, response.message));
+                statusCode = 401;
+                break;
 
             case ResponseStatus.Processing:
-                return res.status(102).json(new ApiResponse('Processing', 102, response.message, response.result));
+                statusCode = 102;
+                break;
 
             case ResponseStatus.Accepted:
-                return res.status(202).json(new ApiResponse('Accepted', 202, response.message, response.result));
+                statusCode = 202;
+                break;
 
             case ResponseStatus.BadRequest:
-                return res.status(400).json(new ApiResponse('Bad Request', 400, response.message));
+                statusCode = 400;
+                break;
 
             case ResponseStatus.Forbidden:
-                return res.status(403).json(new ApiResponse('Forbidden', 403, response.message));
+                statusCode = 403;
+                break;
 
             default:
-                return res.status(500).json(new ApiResponse('Internal Server Error', 500, 'An unexpected error occurred'));
+                statusCode = 500;
+                message = 'An unexpected error occurred';
         }
+
+        return res.status(statusCode).json(new ApiResponse(status, statusCode, message, result));
     }
 }
 

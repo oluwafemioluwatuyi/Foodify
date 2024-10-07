@@ -15,14 +15,14 @@ const Register = catchAsync(async (req, res) =>{
         const { firstName, lastName, email, password, user_type, phone, NIN_number, Voter_card, Account_number, Account_name, profile_picture, date_of_birth, latitude, longitude } = req.body;
 
         if (!Object.values(USER_TYPE).includes(user_type)) {
-            return res.status(404).json({ message: 'Cannot be found' });
+            return ControllerHelper.handleApiResponse(res, null, ResponseStatus.BadRequest, 'Cannot be found');
         }
 
         // Check if the user exists
         let existingUser = await User.findOne({ where: { email } });
 
         if (existingUser) {
-            return res.status(402).json({ message: "User already exists" });
+            return ControllerHelper.handleApiResponse(res, null, ResponseStatus.Error, "User already exists");
         }
 
         // Hash password
@@ -77,18 +77,8 @@ const Register = catchAsync(async (req, res) =>{
         const verificationToken = await generateEmailVerificationToken(newUser);
         await newUser.update({emailVerificationToken:verificationToken});
         await sendVerificationEmail(newUser.email, verificationToken);
-        console.log(verificationToken);
 
-        return res.status(201).json({ message: 'found' });
-
-        // Return response
-        // return ControllerHelper.handleApiResponse(
-        //     res,
-        //     ResponseStatus.Created,
-        //     AppStatusCodes.Success,
-        //     "User registered successfully"
-        
-        // );
+        return ControllerHelper.handleApiResponse(res, newUser, ResponseStatus.Created, 'User registered successfully');
 });
 
 const Login = catchAsync(async(req,res)=>{
@@ -100,34 +90,22 @@ const Login = catchAsync(async(req,res)=>{
       });
      if(!user)
      {
-         return res.status(404).json({ message: 'User not found. Please check your credentials.' });
+        return ControllerHelper.handleApiResponse(res, null, ResponseStatus.NotFound, 'User not found. Please check your credentials.');
      }
 
-     //check if the email is verified
      if(!user.isEmailVerified)
      {
-        return res.status(403).json({ message: 'Email not verified. Please verify your email to log in.' });
+        return ControllerHelper.handleApiResponse(res, null, ResponseStatus.Unauthorized, 'Email not verified. Please verify your email to log in.');
 
      }
     //check if the password is matched
      const checkPassword = await  confirmPassword(password, user.password)
      if(!checkPassword)
      {
-        return res.status(403).json({ message: 'Email not verified. Please verify your email to log in.' });
+        return ControllerHelper.handleApiResponse(res, null, ResponseStatus.Unauthorized, 'Invalid credentials.');
      }
      const token = await generateToken(user);
-    
-     return res.status(200).json({ 
-        message: 'Login successful', 
-        token
-      });
-    //  return ControllerHelper.handleApiResponse(
-    //     res,
-    //     ResponseStatus.Created,
-    //     AppStatusCodes.Success,
-    //     "User registered successfully",
-    //     newUser
-    //  )
+    return ControllerHelper.handleApiResponse(res, user, ResponseStatus.Success, 'User logged in successfully');
 });
 
 const verifyEmail = catchAsync(async(req,res) =>{
@@ -137,16 +115,16 @@ const verifyEmail = catchAsync(async(req,res) =>{
     const user = await User.findByPk(decoded.id);
     if(!user)
     {
-        return res.status(404).JSON({message:'user not found'})
+        return ControllerHelper.handleApiResponse(res, null, ResponseStatus.NotFound, 'User not found');
     }
     if(user.isEmailVerified)
     {
-        return res.status(400).json({ message: 'Email already verified' });
+        return ControllerHelper.handleApiResponse(res, null, ResponseStatus.BadRequest, 'Email already verified');
     }
 
     if(user.emailVerificationToken < new Date)
     {
-        return 
+        return ControllerHelper.handleApiResponse(res, null, ResponseStatus.BadRequest, 'Verification token has expired. Please request a new one.'); 
 
     }
     user.isEmailVerified = true;
@@ -155,7 +133,7 @@ const verifyEmail = catchAsync(async(req,res) =>{
 
      await user.save();
 
-     return res.status(200).json({ message: 'Email successfully verified' });
+     return ControllerHelper.handleApiResponse(res, null, ResponseStatus.Success, 'Email successfully verified');
 })
 
 
@@ -169,13 +147,13 @@ const forgotPassword = async (req,res)=>{
       });
     if(!user)
     {
-     return res.status(404).json({ message: 'User not found' });
+        return ControllerHelper.handleApiResponse(res, null, ResponseStatus.NotFound, 'User not found');
     }
     const token = await generateToken(user);
     user.passwordResetToken = token;
     user.tokenExpirationDate = Date.now() +36000;
     await user.save();
-    return res.status(200).json({ message: 'Password reset token generated successfully', token });
+    return ControllerHelper.handleApiResponse(res, token, ResponseStatus.Success, 'Password reset token generated successfully');
 }
 
 const resetPassword = async (req, res)=>{
@@ -185,13 +163,13 @@ const resetPassword = async (req, res)=>{
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findByPk(decoded.id);
     if(!user ||user.tokenExpirationDate < Date.now()){
-        return res.status(400).json({ message: 'Token is invalid or has expired' });
+        return ControllerHelper.handleApiResponse(res, null, ResponseStatus.BadRequest, 'Token is invalid or has expired');
     }
     user.password = await hashPassword(password);
     user.passWordResetToken =null;
     user.tokenExpirationDate = null;
     await user.save();
-    return res.status(200).json({ message: 'Password reset successfully'});
+    return ControllerHelper.handleApiResponse(res, null, ResponseStatus.Success, 'Password reset successfully');
 }
 
 module.exports = {
