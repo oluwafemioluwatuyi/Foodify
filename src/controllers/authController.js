@@ -2,7 +2,7 @@ const {User} = require('../models/index.js');
 const USER_TYPE = require('../models/enumConstant/userTypes');
 const ControllerHelper = require('../Helpers/ControllerHelper.js');
 const ResponseStatus = require('../Helpers/ResponseStatus');
-const AppStatusCodes = require('../Helpers/AppStatusCode');
+const UserDTO = require('../dtos/user.dto.js');
 const {hashPassword, confirmPassword, generateEmailVerificationToken, generateToken} = require('../utils/authUtil');
 const catchAsync = require('../utils/catchAsync');
 const sendVerificationEmail  = require('../utils/emailUtil');
@@ -72,13 +72,23 @@ const Register = catchAsync(async (req, res) =>{
             default:
         }
 
-
         // Generate email verification token
         const verificationToken = await generateEmailVerificationToken(newUser);
         await newUser.update({emailVerificationToken:verificationToken});
         await sendVerificationEmail(newUser.email, verificationToken);
 
-        return ControllerHelper.handleApiResponse(res, newUser, ResponseStatus.Created, 'User registered successfully');
+        // Create User DTO
+    const userDto = new UserDTO({
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
+        email: newUser.email,
+        phone: newUser.phone,
+        dateOfBirth: newUser.date_of_birth,
+        userType: newUser.user_type,
+        profilePicture: newUser.profile_picture,
+    });
+
+        return ControllerHelper.handleApiResponse(res, userDto.toJson(), ResponseStatus.Created, 'User registered successfully');
 });
 
 const Login = catchAsync(async(req,res)=>{
@@ -105,7 +115,17 @@ const Login = catchAsync(async(req,res)=>{
         return ControllerHelper.handleApiResponse(res, null, ResponseStatus.Unauthorized, 'Invalid credentials.');
      }
      const token = await generateToken(user);
-    return ControllerHelper.handleApiResponse(res, user, ResponseStatus.Success, 'User logged in successfully');
+ // Create User DTO
+ const userDto = new UserDTO({
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: user.email,
+    phone: user.phone,
+    dateOfBirth: user.date_of_birth,
+    userType: user.user_type,
+    profilePicture: user.profile_picture,
+});
+    return ControllerHelper.handleApiResponse(res, { user: userDto.toJson(), token }, ResponseStatus.Success, 'User logged in successfully');
 });
 
 const verifyEmail = catchAsync(async(req,res) =>{
