@@ -5,12 +5,10 @@ module.exports = (sequelize, DataTypes) => {
       order_total: DataTypes.DECIMAL(10, 2),
       delivery_status: DataTypes.STRING
     }, {});
-    // Order.associate = function(models) {
-    //   Order.belongsTo(models.User, { foreignKey: 'user_id' });
-    //   Order.belongsTo(models.Restaurant, { foreignKey: 'restaurant_id' });
-    //   Order.hasMany(models.OrderItem, { foreignKey: 'order_id' });
-    //   Order.hasOne(models.Payment, { foreignKey: 'order_id' });
-    // };
+
+    Order.associate = (models) => {
+      Order.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
+  };
     return Order;
   };
   

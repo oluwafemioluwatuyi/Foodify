@@ -1,3 +1,4 @@
+const axios = require('axios');
 const MonnifyClient = require('../clients/MonnifyClient');
 const IWalletServiceProvider = require('../interface/IWalletProviderService')
 
@@ -5,7 +6,7 @@ class MonnifyWalletProviderService extends IWalletServiceProvider{
 
     constructor(){
         super();
-        this.monnifyClient = new MonnifyClient()     
+        this.monnifyClient = MonnifyClient    
     }
 
     async createWallet(createWalletDto){

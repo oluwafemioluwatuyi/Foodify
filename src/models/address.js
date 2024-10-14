@@ -6,9 +6,6 @@ module.exports = (sequelize, DataTypes) => {
       street: DataTypes.STRING,
       pincode: DataTypes.INTEGER
     }, {});
-    // Address.associate = function(models) {
-    //   Address.belongsTo(models.user, { foreignKey: 'user_id' });
-    // };
     return Address;
   };
   

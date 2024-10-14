@@ -5,9 +5,6 @@ module.exports = (sequelize, DataTypes) => {
       amount: DataTypes.DECIMAL(10, 2),
       status: DataTypes.STRING
     }, {});
-    Payment.associate = function(models) {
-      Payment.belongsTo(models.Order, { foreignKey: 'order_id' });
-    };
     return Payment;
   };
   

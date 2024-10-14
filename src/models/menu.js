@@ -4,9 +4,6 @@ module.exports = (sequelize, DataTypes) => {
       item_name: DataTypes.STRING,
       price: DataTypes.DECIMAL(10, 2)
     }, {});
-    Menu.associate = function(models) {
-      Menu.belongsTo(models.Restaurant, { foreignKey: 'restaurant_id' });
-    };
     return Menu;
   };
   

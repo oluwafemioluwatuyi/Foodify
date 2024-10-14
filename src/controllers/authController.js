@@ -8,6 +8,9 @@ const catchAsync = require('../utils/catchAsync');
 const sendVerificationEmail  = require('../utils/emailUtil');
 const jwt = require('jsonwebtoken');
 const { Op } = require('sequelize');
+const WalletService = require('../services/walletService.js');
+
+const walletService = new WalletService();
 
 
 
@@ -71,6 +74,8 @@ const Register = catchAsync(async (req, res) =>{
                 break;
             default:
         }
+
+        const walletResponse = await walletService.createUserWallet(newUser);
 
         // Generate email verification token
         const verificationToken = await generateEmailVerificationToken(newUser);

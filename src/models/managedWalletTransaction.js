@@ -9,9 +9,6 @@ module.exports = (sequelize, DataTypes) => {
       is_credit: DataTypes.BOOLEAN,
       status: DataTypes.STRING
     }, {});
-    WalletTransaction.associate = function(models) {
-      WalletTransaction.belongsTo(models.ManagedWallet, { foreignKey: 'managed_wallet_id' });
-    };
     return WalletTransaction;
   };
   

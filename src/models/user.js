@@ -22,6 +22,11 @@ module.exports = (sequelize, DataTypes) =>{
         latitude: { type: DataTypes.DECIMAL(9, 6),allowNull: true, },
         longitude: { type: DataTypes.DECIMAL(9, 6),allowNull: true, }
     });
+    User.associate = (models) => {
+        User.belongsTo(models.Wallet, { foreignKey: 'walletId', as: 'wallet' });
+        User.belongsTo(models.Order, { foreignKey: 'orderId', as: 'order' });
+    };
+    
     return User;
 }
 
