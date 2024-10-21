@@ -2,7 +2,7 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkInsert('WalletProviders', [
+    await queryInterface.bulkInsert('WalletProvider', [
       {
         id: 'a3bb189e-8bf9-3888-9912-ace4e6543002',
         name: 'Monnify',
@@ -15,7 +15,7 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('WalletProviders', {
+    await queryInterface.bulkDelete('WalletProvider', {
       id: 'a3bb189e-8bf9-3888-9912-ace4e6543002' 
     }, {});
   }

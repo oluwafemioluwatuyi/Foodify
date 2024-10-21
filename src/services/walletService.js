@@ -2,11 +2,11 @@ const MonnifyWalletProviderService = require('./MonnifyWalletProviderService');
 
 class WalletService {
     constructor(){
-        this.monnifyWalletProviderService = new MonnifyWalletProviderService();
+        this.monnifyWalletProviderService = MonnifyWalletProviderService;
     }
 
-     async createUserWallet(user) {
-        const { firstName, lastName, email, bvn, NIN } = user;
+     async createUserWallet(CreateWalletDto) {
+        const { WalletReference,WalletName,CustomerName,CustomerEmail, bvn,Nin, UserId,CurrencyCode} = CreateWalletDto;
 
         const createWalletDto = {
             WalletReference: `wallet-${user.id}`,  // Reference for the wallet
